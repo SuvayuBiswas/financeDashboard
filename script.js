@@ -37,9 +37,7 @@ const SEED_TRANSACTIONS = [
   {id:25, merchant:'Airtel Recharge', category:'Utilities',     type:'expense', amount:399,   date:'2026-01-10'},
 ];
 
-/* ═══════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════ */
+/*STATE */
 let state = {
   transactions: JSON.parse(localStorage.getItem('ledger_tx') || 'null') || SEED_TRANSACTIONS,
   role: localStorage.getItem('ledger_role') || 'admin',
@@ -55,9 +53,7 @@ function saveState() {
   localStorage.setItem('ledger_role', state.role);
 }
 
-/* ═══════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════ */
+/*HELPERS*/
 function fmt(n) {
   return '₹' + Math.abs(n).toLocaleString('en-IN', {maximumFractionDigits:2});
 }
@@ -67,9 +63,7 @@ function fmtDate(d) {
 }
 let nextId = () => Math.max(...state.transactions.map(t=>t.id), 0) + 1;
 
-/* ═══════════════════════════════════════════
-   DERIVED
-═══════════════════════════════════════════ */
+/*DERIVED*/
 function totals() {
   let income = 0, expense = 0;
   state.transactions.forEach(t => {
@@ -108,9 +102,7 @@ function balanceTrend() {
   });
 }
 
-/* ═══════════════════════════════════════════
-   CHARTS
-═══════════════════════════════════════════ */
+/*CHARTS*/
 let lineChart, donutChart, barChart;
 
 Chart.defaults.color = '#9b9b93';
@@ -235,9 +227,7 @@ function buildBarChart() {
   });
 }
 
-/* ═══════════════════════════════════════════
-   RENDER
-═══════════════════════════════════════════ */
+/*RENDER*/
 function renderSummaryCards() {
   const t = totals();
   const lastMonthKey = Object.keys(monthlyData()).sort().slice(-2,-1)[0];
@@ -406,9 +396,7 @@ function renderInsights() {
     </div>`).join('');
 }
 
-/* ═══════════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════════ */
+/*NAVIGATION*/
 const PAGE_META = {
   overview:     { title: 'Overview',      sub: 'Financial summary · April 2026' },
   transactions: { title: 'Transactions',  sub: 'All records, filter & manage' },
@@ -440,9 +428,7 @@ function navigate(btn) {
   if (window.innerWidth < 720) document.getElementById('sidebar').classList.remove('open');
 }
 
-/* ═══════════════════════════════════════════
-   FILTERS & SORT
-═══════════════════════════════════════════ */
+/*FILTERS & SORT*/
 function filterTx() {
   state.filters.search   = document.getElementById('txSearch').value;
   state.filters.type     = document.getElementById('filterType').value;
@@ -471,9 +457,7 @@ function goPage(n) {
   renderTxTable();
 }
 
-/* ═══════════════════════════════════════════
-   MODAL / CRUD
-═══════════════════════════════════════════ */
+/*MODAL / CRUD*/
 function openModal(id) {
   state.editId = id || null;
   document.getElementById('modalTitle').textContent = id ? 'Edit Transaction' : 'Add Transaction';
@@ -545,9 +529,7 @@ function deleteTx(id) {
   toast('Transaction deleted.', 'info');
 }
 
-/* ═══════════════════════════════════════════
-   ROLE
-═══════════════════════════════════════════ */
+/*ROLE*/
 function switchRole(role) {
   state.role = role;
   saveState();
@@ -568,9 +550,7 @@ function applyRole() {
   avatar.textContent = isAdmin ? 'AD' : 'VW';
 }
 
-/* ═══════════════════════════════════════════
-   EXPORT
-═══════════════════════════════════════════ */
+/*EXPORT*/
 function exportCSV() {
   const filtered = getFiltered();
   const header = 'Merchant,Category,Type,Amount,Date\n';
@@ -585,11 +565,9 @@ function exportCSV() {
   toast('Exported as CSV!', 'success');
 }
 
-/* ═══════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════ */
+/*TOAST*/
 function toast(msg, type='info') {
-  const icons = { success:'✓', error:'✕', info:'ℹ' };
+  const icons = { success:'✓', error:'✕', info:'i' };
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.innerHTML = `<span>${icons[type]||''}</span><span>${msg}</span>`;
@@ -597,9 +575,7 @@ function toast(msg, type='info') {
   setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); }, 3000);
 }
 
-/* ═══════════════════════════════════════════
-   CLOCK
-═══════════════════════════════════════════ */
+/*CLOCK*/
 function updateClock() {
   const now = new Date();
   document.getElementById('timeBadge').textContent =
@@ -608,9 +584,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-/* ═══════════════════════════════════════════
-   MISC
-═══════════════════════════════════════════ */
+/*MISC*/
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
 }
@@ -621,9 +595,7 @@ function refreshAll() {
   buildDonutChart();
 }
 
-/* ═══════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════ */
+/*INIT*/
 window.addEventListener('DOMContentLoaded', () => {
   applyRole();
   renderSummaryCards();
